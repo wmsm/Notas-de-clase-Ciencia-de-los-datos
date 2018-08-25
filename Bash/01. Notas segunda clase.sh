@@ -222,13 +222,60 @@ tail -n 1 employee
 #=================================================================================================#
 
 #--------------------------------------------------------------------------------------------------
-# 19. Usar 'less' para abrir un editor y revisar un archivo
+# 19. Usar 'less' para abrir un visualizador y revisar un archivo
 less employee
 #--------------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------------
-# 20. 
+# 20. Para ordenar un archivo usar el comando 'sort'
+seq -f 'esta es la linea %g' 8 > out.1 #Guardar en un archivo una secuencia de lineas
+sort    out.1 out.1 out.1              #Pegar el mismo archivo 3 veces y ordenarlos
+sort -r out.1 out.1 out.1              #Ordenarlos al contrario
+sort -R out.1 out.1 out.1              #Ordenarlo de forma aleatoria
 #--------------------------------------------------------------------------------------------------
+
+#=================================================================================================#
+#                                            EJERCICIO                                            #
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 01. Ordene el archivo employee por EmployeeName.
+#     1. Ir al directorio donde se encuentra employee
+cd bash/files
+#     2. revisar el contenido del inicio del archivo
+head -n 3 employee
+#     3. Guardar los encabezados
+head -n 1 employee > aux.1
+#     4. Eliminar el encabezado para poder ordenar el resto del archivo, luego, ordenar por el
+#        contenido de la celda 3 en adelante (ya que en este caso no es importante declararle cuando
+#        debe parar), despues, pegarle a los encabezados el resultado y mostrarlos en pantalla
+tail -n +2 employee | sort -t , -k 3 | cat aux.1 -
+#     5. Por ultimo eliminar el archivo aux.1
+rm aux.1
+#--------------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------------
+# 02. Ordene el archivo anterior por CustomerID y luego por Birthdate
+#     No entiendo muy bien el ejercicio, quizas estoy usando un archivo diferente, por tal motivo
+#     ordenaré primero por Birthdate y luego si hay coincidencias, ordenar por employee id
+#     1. Guardar los encabezados
+head -n 1 employee > aux.1
+#     2. Eliminar el encabezado para poder trabajar, ordenar primero por la columna 9 y si hay
+#        conflictos que ordene por la columna 2, al final que le pegue los titulos de las columnas
+#        al resultado y que lo copie en pantalla
+tail -n +2 employee | sort -t , -k 9,9 -k 2,2 | cat aux.1 -
+#     3. Eliminar el archivo aux.1
+rm aux.1
+# Esta solucion no es perfecta, pues trata a las fechas como si fueran caracteres
+#--------------------------------------------------------------------------------------------------
+#=================================================================================================#
+
+
+#--------------------------------------------------------------------------------------------------
+# 21. 
+#--------------------------------------------------------------------------------------------------
+
+
 
 
 
