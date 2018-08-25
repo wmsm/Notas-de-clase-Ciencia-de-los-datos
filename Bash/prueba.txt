@@ -1,3 +1,0 @@
-hola mundo cruel 
-
-otro mundo cruel que estoy concatenando
