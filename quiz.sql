@@ -50,3 +50,44 @@ select * from persona order by ssn limit 8;
 select * from persona limit 3;
 select count(*) from persona where fullname like 'U% F%';
 
+---------------------------------------------------------------------------------------------------
+--                                             QUIZ                                              --
+---------------------------------------------------------------------------------------------------
+
+
+--04
+select count(*) from banco where trim(bank)='Discover Financial';
+
+--05
+select ccn from franquicia limit 102;
+
+--06
+select ccn from banco limit 103;
+
+--07
+select count(*) from persona where trim(city)='Irvine (California)';
+
+--08
+select ssn, city from persona order by ssn limit 69;
+
+--09
+select count(*) from persona where city <> 'Portland (Oregon)';
+
+--10
+select t1.fullname from banco as t0 left join persona as t1 on (t0.ssn=t1.ssn) where t0.ccn = "3608-1682-4264-1936";
+
+--11
+select count(*) from franquicia where ccn like '__________5470%';
+
+--12
+select fullname from persona where fullname like 'M% O%' limit 3;
+select count(*) from persona where fullname like 'M% O%';
+
+--13
+select * from persona order by ssn asc  limit 3;
+select * from persona order by ssn desc limit 3;
+
+--14
+describe persona;
+select quarter(birthdate), count(*) from persona group by 1 order by 1;
+select count(*) from persona where quarter(birthdate)=1;
