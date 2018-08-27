@@ -272,10 +272,239 @@ rm aux.1
 
 
 #--------------------------------------------------------------------------------------------------
-# 21. 
+# 21. Para eliminar lineas que sea repetidas y que se encuentran consecutivas se utiliza el comando
+#     'uniq'
+seq -f 'linea %g' 3 > aux.1
+cat aux.1 aux.1 aux.1 aux.1
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+#     Cuando al anterior resultado se le aplica el comando uniq
+cat aux.1 aux.1 aux.1 aux.1 | uniq
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+ #       linea 1
+ #       linea 2
+ #       linea 3
+#     Al no haber filas repetidas de manera consecutiva no es capaz de eliminarlas.
+#     Sin embargo si primero se ordena las lineas, al poner consecutivas las lienas iguales
+#     logra funcionar sin problemas y se logra el objetivo que se queria
+cat aux.1 aux.1 aux.1 aux.1 | sort | uniq
+ #       linea 1
+ #       linea 2
+ #       linea 3
+rm aux.1
 #--------------------------------------------------------------------------------------------------
 
+#--------------------------------------------------------------------------------------------------
+# 22. Contar numero de lineas, palabras, caracteres o bytes de un archivo con el comando 'wc'
+seq -f 'esta es la linea %g del archivo aux.1' 6 > aux.1
+seq -f 'esta es la liena %g del archivo aux.2' 9 > aux.2
+#     * Numero de lineas
+wc -l aux.1 aux.2
+#     * Numero de palabras
+wc -w aux.1 aux.2
+#     * Numero de caracteres
+wc -m aux.1 aux.2
+#     * Numero de bytes
+wc -c aux.1 aux.2
+#     Por defecto, imprime las lineas, las palabras y los bytes
+wc aux.1 aux.2
+# Eliminando los archivos auxiliares
+rm aux.*
+#--------------------------------------------------------------------------------------------------
 
+#=================================================================================================#
+#                                            EJERCICIO                                            #
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 01. Cuántos registros tienen los archivos product, orderdetail y customer
+#     1. Irnos a la carpeta donde estan estos archivos
+cd files
+#     2. Hacer un conteo de las lineas que hay en los 3 archivos
+wc -l product orderdetail customer
+#     3. Devolvernos a la carpeta donde estabamos de Bash
+cd ..
+#--------------------------------------------------------------------------------------------------
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 23. Busqueda con expresiones regulares con el comando 'grep'
+#     El siguiente ejemplo muestra las lineas que contienen un 1 en los numeros del 1 al 20
+seq 20 | grep 1
+#     El simbolo '$' significa el FINAL de la liena
+seq 20 | grep 1$
+#     El simbolo '^' significa el INICIO de la linea
+seq 20 | grep ^1
+#--------------------------------------------------------------------------------------------------
+
+#=================================================================================================#
+#                                            EJERCICIO                                            #
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 01. Cuántos registros hay para la ciudad de AUSTIN en el archivo consumer (customer?)
+#     1. Movernos nuevamente a la carpeta donde esta el archivo
+cd files
+#     2. Verificar el contenido del archivo
+head -n 2 customer
+#     3. Revisar como llegar hasta la columna que deseo, en este caso la 3ra
+grep austin -i customer #Ninguno :| :'(
+#     4. Volver a la carpeta Bash
+cd ..
+#--------------------------------------------------------------------------------------------------
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 24. Reemplazo de cadenas de texto con comando 'tr' (translate)
+#     El parametro '-d' se usa para eliminar 
+echo 'h-o-l-a- -m-u-n-d-o-' | tr -d '-'
+#     De lo contrario se le debe adicionar un parametro mas a la llamada de 'tr' indicandole con
+#     que se desea reemplazar
+echo 'h-o-l-a- -m-u-n-d-o-' | tr '-' '.'
+#     Otra forma de pasarle el texto a tr
+tr '-' '.' << EOF
+'h-o-l-a- -m-u-n-d-o-'
+EOF
+#     Otra mas
+echo 'h-o-l-a- -m-u-n-d-o-' > aux.1
+tr '-' '.' < aux.1
+#     A mayusculas
+tr '[:lower:]' '[:upper:]' < aux.1
+#     Eliminar archivo auxiliares
+rm aux.1
+#--------------------------------------------------------------------------------------------------
+
+#=================================================================================================#
+#                                            EJERCICIO                                            #
+#=================================================================================================#
+
+#--------------------------------------------------------------------------------------------------
+# 01. Para el siguiente archivo, convierta únicamente la primera fila a minúsculas.
+cat > out.1 <<EOF
+Date, Year, CustomerID, Value
+2013-01-12, 2013, 1, 100
+2014-05-12, 2014, 1, 100
+2013-02-25, 2013, 2, 200
+2013-04-04, 2013, 1, 100
+2013-06-21, 2013, 2, 200
+2014-05-12, 2014, 1, 100
+2014-05-12, 2014, 2, 200
+2013-02-28, 2013, 1, 100
+2013-08-02, 2013, 1, 100
+EOF
+#     1. Organizar la fila
+head -n 1 out.1 | tr '[:lower:]' '[:upper:]' > out.2
+#     2. Concatenarlo con los datos
+tail -n +2 out.1 | cat out.2 -
+#     3. Eliminar los archivos auxiliares
+rm out.*
+#--------------------------------------------------------------------------------------------------
+#=================================================================================================#
+
+
+#--------------------------------------------------------------------------------------------------
+# 24. Extraer porciones de texto por cada linea con el comando 'cut'
+echo -e "1234567890\nabcdefghij\nklmnopqrst" | cut -c3-5
+#     El '-' indica las columnas entre la primera y la segunda, la ',' se usa para separarlas
+echo -e "1234567890\nabcdefghij\nklmnopqrst" | cut -c2-4,6-8,10
+#     Con el parametro '-f' y '-d' podemos manipular archivos delimitados (Con columnas)
+echo -e "FieldA,FieldD,FieldE\n2,X,2X\n3,Y,3Y\n4,Z,4Z" | cut -d, -f2
+#         -d, Significa que el delimitador es una coma
+#         -f2 Significa que se va a usar la columna 2
+echo -e "FieldA,FieldD,FieldE\n2,X,2X\n3,Y,3Y\n4,Z,4Z" | cut -d, -f1,2
+#     EJERCICIO
+#     1. Calcule el número de valores diferentes en la columna supplier.id del archivo product
+cd files
+#        Mirar lo que tiene el archivo
+head -n 2 product
+#        a. cortar solo la 3ra columna
+#        b. ordenarla
+#        c. eliminar repetidos
+#        d. contar el numero de lineas que quedaron
+cut -d, -f3 product | sort | uniq | wc -l
+#     2. Obtenga un listado ordenado de las ciudades en el archivo customer
+head -n2 customer
+#        a. cortar la 3ra columna
+#        b. ordenarla
+#        c. Eliminar repetidas
+cut -d, -f3 customer | sort | uniq
+#     3. Obtenga el apellido para todos los empleados en el archivo employee
+head -n2 employee
+#        a. Extraer la columna 3 con el nombre completo
+#        b. Extraer la segunda palabra con el apellido
+#        c. Solo por ser un ejercicio de muestra mostrar solo los primeros registros
+cut -d, -f3 employee | cut -d' ' -f2 | head
+#     Volver a la carpeta bash
+cd ..
+#--------------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------------
+# 25. Borrar columnas con 'colrm' seguido por la columna inicial y la final
+echo \
+"123456790
+abcdefghi
+jklmnopqr" \
+| colrm 3 5 # Elimina desde la columna 3 a la 5, incluyendolas
+#     Si no se especifica la columna donde debe terminar, elimna hasta el final
+#--------------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------------
+# 26. Join de archivos con 'join' seguido de las opciones y los 2 archivos a unir
+#     '-t' para especificar el separador de columnas
+#     '-1' para especificar la columna llave del archivo 1
+#     '-2' para especificar la columna llace del archivo 2
+#     '-o' para especificar las columnas que se desean tener en la salida
+cat > out.1 <<EOF
+key, F1, F2
+  1, 11, 12
+  2, 21, 22
+  4, 41, 42
+EOF
+cat > out.2 <<EOF
+key, F3, F4
+  1, 13, 14
+  2, 23, 24
+  3, 33, 34 
+EOF
+#     Luego de creado los archivos ahora si vamos a unirlos
+join -t, out.1 out.2
+#     Por defecto la columna por la cual se unen es la primera, sin embargo se puede especificar
+join -t, -1 1 -2 1 out.1 out.2
+#     Para especificar las columnas deseadas en la salida
+join -t, -o1.1,1.2,2.3 out.1 out.2
+#     Eliminar los archivos auxiliares
+rm out.*
+# EJERCICIO
+# 1. Agregue los campos EmployeeName del archivo employee y  Name de customer a los archivos
+#     order2010, ..., order2015
+# TODO: Pendiente
+#--------------------------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------------------------
+# 27. Pegar linea con linea con comando 'paste', '-d' para asignar un delimitador (TAB por defecto)
+seq -f 'linea %g archivo 1' 5 > out.1
+seq -f 'linea %g archivo 2' 5 > out.2
+paste -d'-' out.1 out.2
+rm out.*
+#--------------------------------------------------------------------------------------------------
 
 
 
