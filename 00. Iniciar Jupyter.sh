@@ -1,0 +1,1 @@
+jupyter notebook --notebook-dir=/mnt/c/Users/HP/01.\ Proyectos\ de\ jupyter/01.\ Ciencia\ de\ los\ datos/
